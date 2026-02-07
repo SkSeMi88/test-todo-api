@@ -16,7 +16,7 @@ class Task extends Model
     public static $rules = [
         'title'         => 'required|string|max:255',
         'description'   => 'nullable|string',
-        'status'        => 'in:pending,in_progress,completed, canceled'
+        'status'        => 'in:pending, in_progress, completed, canceled'
     ];
     
     // Сообщения об ошибках
@@ -37,4 +37,18 @@ class Task extends Model
         
         return $validator->validated();
     }
+
+    public function toApiArray(): array
+{
+    return [
+        'id' => $this->id,
+        'title' => $this->title,
+        'description' => $this->description,
+        'status' => $this->status,
+        // 'priority' => $this->priority,
+        // 'due_date' => $this->due_date ? $this->due_date->format('Y-m-d H:i:s') : null,
+        'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+        'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+    ];
+}
 }

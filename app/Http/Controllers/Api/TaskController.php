@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\Task;
+
 class TaskController extends Controller
 {
     /**
@@ -14,6 +16,7 @@ class TaskController extends Controller
     {
         //
         $tasks = Task::all();
+        // var_dump($tasks);
         return response()->json([
             'success' => true,
             'data' => $tasks
@@ -48,18 +51,34 @@ class TaskController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Task created successfully',
             'data' => $task,
-            'message' => 'Task created successfully'
         ], 201);
     }
 
     /**
      * Display the specified resource.
+     * GET /api/v1/tasks/{id}
+     * Получить задачу по ID
      */
     public function show(string $id)
     {
-        //
+        $task = Task::find($id);
+        var_dump($task);
+        if (!$task) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Задача не найдена'
+            ], 404);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'data' => $task->toApiArray()
+        ]);
     }
+
+
 
     /**
      * Update the specified resource in storage.
