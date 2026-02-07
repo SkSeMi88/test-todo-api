@@ -13,6 +13,11 @@ class TaskController extends Controller
     public function index()
     {
         //
+        $tasks = Task::all();
+        return response()->json([
+            'success' => true,
+            'data' => $tasks
+        ]);
     }
 
     /**
@@ -21,6 +26,30 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         //
+                $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'nullable|in:pending,in_progress,completed'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $task = Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status ?? 'pending'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $task,
+            'message' => 'Task created successfully'
+        ], 201);
     }
 
     /**
