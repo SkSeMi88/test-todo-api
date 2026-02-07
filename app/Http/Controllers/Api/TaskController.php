@@ -71,7 +71,7 @@ class TaskController extends Controller
                 'message' => 'Задача не найдена'
             ], 404);
         }
-        
+
         return response()->json([
             'success' => true,
             'data' => $task->toApiArray()
