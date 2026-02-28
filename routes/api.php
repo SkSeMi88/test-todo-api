@@ -16,19 +16,22 @@ use App\Http\Controllers\Api\TaskController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-// Версия API v1
-Route::prefix('v1')->group(function () {
-    // Полный CRUD для задач
-    Route::apiResource('tasks', TaskController::class);
+// // Версия API v1
+// Route::prefix('v1')->group(function () {
+//     // Полный CRUD для задач
+//     Route::apiResource('tasks', TaskController::class);
     
-    // Если нужны дополнительные методы вне CRUD
-    Route::patch('/tasks/{task}/complete', [TaskController::class, 'complete'])
-        ->name('tasks.complete');
+//     // Дополнительные методы вне CRUD
+//     Route::patch('/tasks/{task}/complete', [TaskController::class, 'complete'])
+//         ->name('tasks.complete');
     
-    Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])
-        ->name('tasks.status');
-});
+//     Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])
+//         ->name('tasks.status');
+// });
+
+
+Route::apiResource('tasks', TaskController::class);
