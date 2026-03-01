@@ -1,33 +1,69 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Controllers\Api;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTaskRequest;
+use App\Models\Task;
+use Illuminate\Http\Response;
 
-class StoreTaskRequest extends FormRequest
+class TaskController extends Controller
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Получение всех задач
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-
-    public function authorize()
+    public function index()
     {
-        return true; // разрешаем всем
+        return response()->json(Task::all(), Response::HTTP_OK);
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Создание новой задачи
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @param  \App\Http\Requests\StoreTaskRequest  $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function rules(): array
+    public function store(StoreTaskRequest $request)
     {
-        return [
-            //
-            'title'         => 'required|string|max:255',
-            'description'   => 'nullable|string',
-            'status'        => 'sometimes|in:pending,in_progress,completed,canceled', // если поле пришло, проверка значения
-        ];
+        $task = Task::create($request->validated());
+        return response()->json($task, Response::HTTP_CREATED);
+    }
+
+    /**
+     * Получение одной задачи
+     *
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Task $task)
+    {
+        return response()->json($task, Response::HTTP_OK);
+    }
+
+    /**
+     * Обновление задачи
+     *
+     * @param  \App\Http\Requests\StoreTaskRequest  $request
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(StoreTaskRequest $request, Task $task)
+    {
+        $task->update($request->validated());
+        return response()->json($task, Response::HTTP_OK);
+    }
+
+    /**
+     * Удаление задачи
+     *
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Task $task)
+    {
+        $task->delete();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
-

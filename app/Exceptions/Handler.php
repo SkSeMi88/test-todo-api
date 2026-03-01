@@ -59,8 +59,9 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+        
 
-        // Обработка ситуации, когда модель не найдена (например, задача, пользователь и т.д.)
+        // Для ситуаций, когда модель не найдена (например, задача с неверным ID)
         $this->renderable(function (ModelNotFoundException $e, $request) {
             if ($request->expectsJson()) {
                 return response()->json([
@@ -69,11 +70,11 @@ class Handler extends ExceptionHandler
             }
         });
 
-        // Обработка ситуации, когда маршрут не найден (несуществующий URL)
+        // Для всех остальных 404 (несуществующий маршрут)
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Маршрут не найден'
+                    'message' => 'Ресурс не найден'
                 ], 404);
             }
         });
